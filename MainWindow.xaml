@@ -1,13 +1,22 @@
 ﻿<Window x:Class="WpfAttempt3.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Recipe Application" Height="500" Width="600">
+        Title="Recipe Application" Height="500" Width="800">
     <Grid>
+        <!-- Toolbar with Display Recipes Button -->
+        <ToolBar HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button Content="Display All Recipes" Click="DisplayRecipesButton_Click"/>
+        </ToolBar>
+        
         <!-- Recipe Name Section -->
         <Label Content="Recipe name:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,27,0,0"/>
         <TextBox Name="RecipeNameTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="95,40,0,0" Width="152" TextChanged="RecipeNameTextBox_TextChanged"/>
         <Button Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="140,63,0,0" Width="74" Click="SaveButton_Click"/>
-
+        
+        <!-- Recipe Selection Section -->
+        <ComboBox Name="RecipeSelectComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,40,0,0" Width="200"/>
+        <Button Content="Display Selected Recipe" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,70,0,0" Width="150" Click="DisplaySelectedRecipe_Click"/>
+        
         <!-- Ingredient Section -->
         <Label Content="Ingredient" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,79,0,0"/>
         <Label Content="Name:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,110,0,0"/>
@@ -25,18 +34,12 @@
             <ComboBoxItem Content="Dairy"/>
         </ComboBox>
         <Button Content="Save Ingredient" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="84,0,0,0" Width="137" Click="SaveIngredientButton_Click"/>
-
+        
         <!-- Recipe Steps Section -->
         <Label Content="Steps:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,285,0,0"/>
         <TextBox Name="StepsTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,321,0,0" Width="240" Height="100" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="StepsTextBox_TextChanged"/>
-
+        
         <!-- Save Recipe Button -->
         <Button Name="SaveRecipeButton" Content="Save Recipe" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="127,437,0,0" Width="100" Click="SaveRecipeButton_Click"/>
-        <!-- Toolbar with Display Recipes Button -->
-        <ToolBar HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Button Content="Display Recipes" Click="DisplayRecipesButton_Click"/>
-        </ToolBar>
     </Grid>
 </Window>
-
-

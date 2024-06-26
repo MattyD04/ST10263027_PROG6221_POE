@@ -22,6 +22,8 @@ namespace WpfAttempt3
     /// References:
     /// https://www.tutorialspoint.com/wpf/wpf_data_binding.htm 
     /// https://learn.microsoft.com/en-us/dotnet/desktop/wpf/controls/?view=netframeworkdesktop-4.8
+    /// https://www.w3schools.com/cs/cs_operators_logical.php
+    /// https://learn.microsoft.com/en-us/dotnet/desktop/wpf/events/how-to-add-an-event-handler-using-code?view=netdesktop-8.0 
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -52,6 +54,7 @@ namespace WpfAttempt3
             ingredients = new List<Ingredient>();
             recipes = new List<Recipe>();
             UpdateSaveRecipeButtonState();
+            UpdateRecipeSelectComboBox();
         }
         //***************************************************************************************//
         private void SaveButton_Click(object sender, RoutedEventArgs e)// method to save the recipe name(adapted from previous console app and debugged by claude ai)
@@ -117,7 +120,7 @@ namespace WpfAttempt3
                     Ingredients = new List<Ingredient>(ingredients),
                     Steps = steps
                 });
-
+                //clears all fields to allow for the entering of a new recipe
                 ingredients.Clear();
                 savedRecipeNames.Clear();
                 RecipeNameTextBox.Clear();
@@ -126,6 +129,7 @@ namespace WpfAttempt3
 
                 MessageBox.Show($"Recipe '{recipeName}' has been saved successfully!");
                 UpdateSaveRecipeButtonState();
+                UpdateRecipeSelectComboBox();
             }
             else
             {
@@ -175,6 +179,39 @@ namespace WpfAttempt3
                                     $"Ingredients:\n{string.Join("\n", recipes[i].Ingredients.Select(ing => $"{ing.Name} - {ing.Quantity} {ing.Unit} ({ing.FoodGroup})"))}\n" +
                                     $"Steps:\n{recipes[i].Steps}");
                 }
+            }
+        }
+        //***************************************************************************************//
+        private void UpdateRecipeSelectComboBox()
+        {
+            RecipeSelectComboBox.Items.Clear();
+            foreach (var recipe in recipes.OrderBy(r => r.Name))
+            {
+                RecipeSelectComboBox.Items.Add(recipe.Name);
+            }
+        }
+        //***************************************************************************************//
+        private void DisplaySelectedRecipe_Click(object sender, RoutedEventArgs e)//method to display a specific recipe from all the recipes selected (debugged and corrected by Claude AI)
+        {
+            if (RecipeSelectComboBox.SelectedItem != null)
+            {
+                string selectedRecipeName = RecipeSelectComboBox.SelectedItem.ToString();
+                Recipe selectedRecipe = recipes.FirstOrDefault(r => r.Name == selectedRecipeName);
+
+                if (selectedRecipe != null)
+                {
+                    string recipeDetails = $"Recipe: {selectedRecipe.Name}\n\n" +
+                                           "Ingredients:\n" +
+                                           string.Join("\n", selectedRecipe.Ingredients.Select(ing => $"{ing.Name} - {ing.Quantity} {ing.Unit} ({ing.FoodGroup})")) +
+                                           "\n\nSteps:\n" +
+                                           selectedRecipe.Steps;
+
+                    MessageBox.Show(recipeDetails, "Recipe Details", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a recipe from the dropdown list.", "No Recipe Selected", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }
