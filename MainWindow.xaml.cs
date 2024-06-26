@@ -22,9 +22,11 @@ namespace WpfAttempt3
     /// </summary>
     public partial class MainWindow : Window
     {
+        //lists to dynamically store the information about the recipes in order to store an infinite amount according to how many recipes the user enters
         public List<string> savedRecipeNames;
         public List<Ingredient> ingredients;
-
+        public List<Recipe> recipes;
+        //***************************************************************************************//
         public class Ingredient // a class to store the variables of the ingredients and for better practice
         {
             public string Name { get; set; }
@@ -33,21 +35,30 @@ namespace WpfAttempt3
             public string FoodGroup { get; set; }
         }
         //***************************************************************************************//
+        public class Recipe //class to store the details related to the recipe
+        {
+            public string Name { get; set; }
+            public List<Ingredient> Ingredients { get; set; }
+            public string Steps { get; set; }
+        }
+        //***************************************************************************************//
         public MainWindow()
         {
             InitializeComponent();
             savedRecipeNames = new List<string>();
             ingredients = new List<Ingredient>();
+            recipes = new List<Recipe>();
+            UpdateSaveRecipeButtonState();
         }
-
+        //***************************************************************************************//
         private void SaveButton_Click(object sender, RoutedEventArgs e)// method to save the recipe name(adapted from previous console app and debugged by claude ai)
         {
-            string recipeName = RecipeNameTextBox.Text;
+            string recipeName = RecipeNameTextBox.Text.Trim();
             if (!string.IsNullOrWhiteSpace(recipeName))
             {
                 savedRecipeNames.Add(recipeName);
-                RecipeNameTextBox.Clear();
                 MessageBox.Show($"Recipe name '{recipeName}' has been saved!");
+                UpdateSaveRecipeButtonState();
             }
             else
             {
@@ -55,11 +66,11 @@ namespace WpfAttempt3
             }
         }
         //***************************************************************************************//
-        private void SaveIngredientButton_Click(object sender, RoutedEventArgs e)
+        private void SaveIngredientButton_Click(object sender, RoutedEventArgs e) //method to save the ingredients and their details (debugged and corrected by chatgpt)
         {
-            string name = IngredientNameTextBox.Text;
-            string quantity = QuantityTextBox.Text;
-            string unit = UnitTextBox.Text;
+            string name = IngredientNameTextBox.Text.Trim();
+            string quantity = QuantityTextBox.Text.Trim();
+            string unit = UnitTextBox.Text.Trim();
             string foodGroup = (FoodGroupComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
 
             if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(quantity) &&
@@ -74,6 +85,7 @@ namespace WpfAttempt3
                 });
                 MessageBox.Show($"Ingredient '{name}' has been saved!");
                 ClearIngredientFields();
+                UpdateSaveRecipeButtonState();
             }
             else
             {
@@ -87,6 +99,57 @@ namespace WpfAttempt3
             QuantityTextBox.Clear();
             UnitTextBox.Clear();
             FoodGroupComboBox.SelectedIndex = -1;
+        }
+        //***************************************************************************************//
+        private void SaveRecipeButton_Click(object sender, RoutedEventArgs e)//method to save all the details of the recipe to an array list (corrected by Claude AI)
+        {
+            string recipeName = RecipeNameTextBox.Text.Trim();
+            string steps = StepsTextBox.Text.Trim();
+
+            if (!string.IsNullOrWhiteSpace(recipeName) && ingredients.Count > 0 && !string.IsNullOrWhiteSpace(steps))
+            {
+                recipes.Add(new Recipe
+                {
+                    Name = recipeName,
+                    Ingredients = new List<Ingredient>(ingredients),
+                    Steps = steps
+                });
+
+                ingredients.Clear();
+                savedRecipeNames.Clear();
+                RecipeNameTextBox.Clear();
+                StepsTextBox.Clear();
+                ClearIngredientFields();
+
+                MessageBox.Show($"Recipe '{recipeName}' has been saved successfully!");
+                UpdateSaveRecipeButtonState();
+            }
+            else
+            {
+                string errorMessage = "Please ensure you have:\n";
+                if (string.IsNullOrWhiteSpace(recipeName)) errorMessage += " Entered a recipe name\n";
+                if (ingredients.Count == 0) errorMessage += "Added at least one ingredient\n";
+                if (string.IsNullOrWhiteSpace(steps)) errorMessage += "Provided the recipe steps";
+
+                MessageBox.Show(errorMessage, "Incomplete Recipe", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+        //***************************************************************************************//
+        private void UpdateSaveRecipeButtonState()
+        {
+            SaveRecipeButton.IsEnabled = !string.IsNullOrWhiteSpace(RecipeNameTextBox.Text) &&
+                                         ingredients.Count > 0 &&
+                                         !string.IsNullOrWhiteSpace(StepsTextBox.Text);
+        }
+        //***************************************************************************************//
+        private void RecipeNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateSaveRecipeButtonState();
+        }
+        //***************************************************************************************//
+        private void StepsTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateSaveRecipeButtonState();
         }
     }
 }
