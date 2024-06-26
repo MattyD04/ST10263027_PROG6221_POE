@@ -25,14 +25,14 @@ namespace WpfAttempt3
         public List<string> savedRecipeNames;
         public List<Ingredient> ingredients;
 
-        public class Ingredient
+        public class Ingredient // a class to store the variables of the ingredients and for better practice
         {
             public string Name { get; set; }
             public string Quantity { get; set; }
             public string Unit { get; set; }
             public string FoodGroup { get; set; }
         }
-
+        //***************************************************************************************//
         public MainWindow()
         {
             InitializeComponent();
