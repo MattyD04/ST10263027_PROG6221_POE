@@ -19,6 +19,9 @@ namespace WpfAttempt3
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
+    /// References:
+    /// https://www.tutorialspoint.com/wpf/wpf_data_binding.htm 
+    /// https://learn.microsoft.com/en-us/dotnet/desktop/wpf/controls/?view=netframeworkdesktop-4.8
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -135,6 +138,11 @@ namespace WpfAttempt3
             }
         }
         //***************************************************************************************//
+        private void DisplayRecipesButton_Click(object sender, RoutedEventArgs e)
+        {
+            DisplayRecipes();
+        }
+        //***************************************************************************************//
         private void UpdateSaveRecipeButtonState()// (given by Claude AI)
         {
             SaveRecipeButton.IsEnabled = !string.IsNullOrWhiteSpace(RecipeNameTextBox.Text) &&
@@ -150,6 +158,24 @@ namespace WpfAttempt3
         private void StepsTextBox_TextChanged(object sender, TextChangedEventArgs e) //(given by Claude AI)
         {
             UpdateSaveRecipeButtonState();
+        }
+        //***************************************************************************************//
+        public void DisplayRecipes()//method to display the recipes entered (adapted from previous console applicatiion)
+        {
+            if (recipes.Count == 0)
+            {
+                MessageBox.Show("No recipes saved yet.");
+            }
+            else
+            {
+                recipes.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase));//sorts the recipes in alphabetical order
+                for (int i = 0; i < recipes.Count; i++)
+                {
+                    MessageBox.Show($"Recipe {i + 1}: {recipes[i].Name}\n" +
+                                    $"Ingredients:\n{string.Join("\n", recipes[i].Ingredients.Select(ing => $"{ing.Name} - {ing.Quantity} {ing.Unit} ({ing.FoodGroup})"))}\n" +
+                                    $"Steps:\n{recipes[i].Steps}");
+                }
+            }
         }
     }
 }
