@@ -35,7 +35,7 @@ namespace WpfAttempt3
             public string FoodGroup { get; set; }
         }
         //***************************************************************************************//
-        public class Recipe //class to store the details related to the recipe
+        public class Recipe //class to store the details related to the recipe and for better practice
         {
             public string Name { get; set; }
             public List<Ingredient> Ingredients { get; set; }
@@ -135,19 +135,19 @@ namespace WpfAttempt3
             }
         }
         //***************************************************************************************//
-        private void UpdateSaveRecipeButtonState()
+        private void UpdateSaveRecipeButtonState()// (given by Claude AI)
         {
             SaveRecipeButton.IsEnabled = !string.IsNullOrWhiteSpace(RecipeNameTextBox.Text) &&
                                          ingredients.Count > 0 &&
                                          !string.IsNullOrWhiteSpace(StepsTextBox.Text);
         }
         //***************************************************************************************//
-        private void RecipeNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void RecipeNameTextBox_TextChanged(object sender, TextChangedEventArgs e) //(given by Claude AI)
         {
             UpdateSaveRecipeButtonState();
         }
         //***************************************************************************************//
-        private void StepsTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void StepsTextBox_TextChanged(object sender, TextChangedEventArgs e) //(given by Claude AI)
         {
             UpdateSaveRecipeButtonState();
         }
