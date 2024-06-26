@@ -40,21 +40,21 @@ namespace WpfAttempt3
             ingredients = new List<Ingredient>();
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private void SaveButton_Click(object sender, RoutedEventArgs e)// method to save the recipe name(adapted from previous console app and debugged by claude ai)
         {
             string recipeName = RecipeNameTextBox.Text;
             if (!string.IsNullOrWhiteSpace(recipeName))
             {
                 savedRecipeNames.Add(recipeName);
                 RecipeNameTextBox.Clear();
-                MessageBox.Show($"Recipe name '{recipeName}' saved!");
+                MessageBox.Show($"Recipe name '{recipeName}' has been saved!");
             }
             else
             {
                 MessageBox.Show("Please enter a recipe name.");
             }
         }
-
+        //***************************************************************************************//
         private void SaveIngredientButton_Click(object sender, RoutedEventArgs e)
         {
             string name = IngredientNameTextBox.Text;
@@ -80,8 +80,8 @@ namespace WpfAttempt3
                 MessageBox.Show("Please fill out all ingredient fields.");
             }
         }
-
-        private void ClearIngredientFields()
+        //***************************************************************************************//
+        private void ClearIngredientFields()// method to clear the ingredients field once the ingredients have been saved
         {
             IngredientNameTextBox.Clear();
             QuantityTextBox.Clear();
@@ -90,4 +90,5 @@ namespace WpfAttempt3
         }
     }
 }
+//*****************************************************end of file******************************************//
 
