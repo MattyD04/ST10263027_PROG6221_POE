@@ -24,6 +24,7 @@ namespace WpfAttempt3
     /// https://learn.microsoft.com/en-us/dotnet/desktop/wpf/controls/?view=netframeworkdesktop-4.8
     /// https://www.w3schools.com/cs/cs_operators_logical.php
     /// https://learn.microsoft.com/en-us/dotnet/desktop/wpf/events/how-to-add-an-event-handler-using-code?view=netdesktop-8.0 
+    /// https://www.geeksforgeeks.org/c-sharp-list-class/
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -34,17 +35,18 @@ namespace WpfAttempt3
         //***************************************************************************************//
         public class Ingredient // a class to store the variables of the ingredients and for better practice
         {
-            public string Name { get; set; }
-            public string Quantity { get; set; }
-            public string Unit { get; set; }
-            public string FoodGroup { get; set; }
+            public string Name { get; set; } // variable for the name of an ingredient
+            public string Quantity { get; set; } // variable for the quantity of a specific ingredient
+            public string Unit { get; set; } //variable for the unit of measurement
+            public string FoodGroup { get; set; } //variable for the food group
+            public int Calories { get; set; } // Added Calories property
         }
         //***************************************************************************************//
         public class Recipe //class to store the details related to the recipe and for better practice
         {
-            public string Name { get; set; }
-            public List<Ingredient> Ingredients { get; set; }
-            public string Steps { get; set; }
+            public string Name { get; set; } //variable for the name of a recipe
+            public List<Ingredient> Ingredients { get; set; } //ingredients list to store ingredients
+            public string Steps { get; set; } //variable for the steps of the recipe
         }
         //***************************************************************************************//
         public MainWindow()
@@ -57,13 +59,13 @@ namespace WpfAttempt3
             UpdateRecipeSelectComboBox();
         }
         //***************************************************************************************//
-        private void SaveButton_Click(object sender, RoutedEventArgs e)// method to save the recipe name(adapted from previous console app and debugged by claude ai)
+        private void SaveButton_Click(object sender, RoutedEventArgs e)// method to save the recipe name(adapted from previous console app and debugged by claude AI)
         {
             string recipeName = RecipeNameTextBox.Text.Trim();
             if (!string.IsNullOrWhiteSpace(recipeName))
             {
                 savedRecipeNames.Add(recipeName);
-                MessageBox.Show($"Recipe name '{recipeName}' has been saved!");
+                MessageBox.Show($"Recipe name '{recipeName}' has been saved!");// message box displays to notify user when a recipe name has been saved
                 UpdateSaveRecipeButtonState();
             }
             else
@@ -78,33 +80,43 @@ namespace WpfAttempt3
             string quantity = QuantityTextBox.Text.Trim();
             string unit = UnitTextBox.Text.Trim();
             string foodGroup = (FoodGroupComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+            string caloriesText = CaloriesTextBox.Text.Trim(); // Get calories text
 
             if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(quantity) &&
-                !string.IsNullOrWhiteSpace(unit) && foodGroup != null)
+                !string.IsNullOrWhiteSpace(unit) && foodGroup != null && !string.IsNullOrWhiteSpace(caloriesText))
             {
-                ingredients.Add(new Ingredient
+                if (int.TryParse(caloriesText, out int calories)) // Parse calories
                 {
-                    Name = name,
-                    Quantity = quantity,
-                    Unit = unit,
-                    FoodGroup = foodGroup
-                });
-                MessageBox.Show($"Ingredient '{name}' has been saved!");
-                ClearIngredientFields();
-                UpdateSaveRecipeButtonState();
+                    ingredients.Add(new Ingredient
+                    {
+                        Name = name,
+                        Quantity = quantity,
+                        Unit = unit,
+                        FoodGroup = foodGroup,
+                        Calories = calories // Add calories
+                    });
+                    MessageBox.Show($"Ingredient '{name}' has been saved!"); //displays if all fields have been filled
+                    ClearIngredientFields();
+                    UpdateSaveRecipeButtonState();
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a valid number for calories.");
+                }
             }
             else
             {
-                MessageBox.Show("Please fill out all ingredient fields.");
+                MessageBox.Show("Please fill out all ingredient fields."); //displays a message if a user tries to save an ingredient without filling in all the fields
             }
         }
         //***************************************************************************************//
         private void ClearIngredientFields()// method to clear the ingredients field once the ingredients have been saved
         {
-            IngredientNameTextBox.Clear();
-            QuantityTextBox.Clear();
-            UnitTextBox.Clear();
-            FoodGroupComboBox.SelectedIndex = -1;
+            IngredientNameTextBox.Clear(); //clears recipe textbox
+            QuantityTextBox.Clear(); //clears quantity textbox
+            UnitTextBox.Clear(); //clears unit text box
+            FoodGroupComboBox.SelectedIndex = -1; //clears food group combo box
+            CaloriesTextBox.Clear(); // Clear calories textbox
         }
         //***************************************************************************************//
         private void SaveRecipeButton_Click(object sender, RoutedEventArgs e)//method to save all the details of the recipe to an array list (corrected by Claude AI)
@@ -142,13 +154,14 @@ namespace WpfAttempt3
             }
         }
         //***************************************************************************************//
-        private void DisplayRecipesButton_Click(object sender, RoutedEventArgs e)
+        private void DisplayRecipesButton_Click(object sender, RoutedEventArgs e) //(given by Claude AI)
         {
             DisplayRecipes();
         }
         //***************************************************************************************//
         private void UpdateSaveRecipeButtonState()// (given by Claude AI)
         {
+            // enables the save recipe button once all fields have been entered
             SaveRecipeButton.IsEnabled = !string.IsNullOrWhiteSpace(RecipeNameTextBox.Text) &&
                                          ingredients.Count > 0 &&
                                          !string.IsNullOrWhiteSpace(StepsTextBox.Text);
@@ -176,13 +189,14 @@ namespace WpfAttempt3
                 for (int i = 0; i < recipes.Count; i++)
                 {
                     MessageBox.Show($"Recipe {i + 1}: {recipes[i].Name}\n" +
-                                    $"Ingredients:\n{string.Join("\n", recipes[i].Ingredients.Select(ing => $"{ing.Name} - {ing.Quantity} {ing.Unit} ({ing.FoodGroup})"))}\n" +
-                                    $"Steps:\n{recipes[i].Steps}");
+                                    $"Ingredients:\n{string.Join("\n", recipes[i].Ingredients.Select(ing => $"{ing.Name} - {ing.Quantity} {ing.Unit} ({ing.FoodGroup}) - {ing.Calories} calories"))}\n" +
+                                    $"Total Calories: {recipes[i].Ingredients.Sum(ing => ing.Calories)}\n" +
+                                    $"Steps:\n{recipes[i].Steps}"); //displays a message box with the details of the recipe
                 }
             }
         }
         //***************************************************************************************//
-        private void UpdateRecipeSelectComboBox()
+        private void UpdateRecipeSelectComboBox() // method to update the recipe selection combo box where the recipes are displayed in alphabetical order(given by Claude AI)
         {
             RecipeSelectComboBox.Items.Clear();
             foreach (var recipe in recipes.OrderBy(r => r.Name))
@@ -202,8 +216,9 @@ namespace WpfAttempt3
                 {
                     string recipeDetails = $"Recipe: {selectedRecipe.Name}\n\n" +
                                            "Ingredients:\n" +
-                                           string.Join("\n", selectedRecipe.Ingredients.Select(ing => $"{ing.Name} - {ing.Quantity} {ing.Unit} ({ing.FoodGroup})")) +
-                                           "\n\nSteps:\n" +
+                                           string.Join("\n", selectedRecipe.Ingredients.Select(ing => $"{ing.Name} - {ing.Quantity} {ing.Unit} ({ing.FoodGroup}) - {ing.Calories} calories")) +
+                                           $"\n\nTotal Calories: {selectedRecipe.Ingredients.Sum(ing => ing.Calories)}\n\n" +
+                                           "Steps:\n" +
                                            selectedRecipe.Steps;
 
                     MessageBox.Show(recipeDetails, "Recipe Details", MessageBoxButton.OK, MessageBoxImage.Information);

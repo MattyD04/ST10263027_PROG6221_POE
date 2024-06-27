@@ -7,16 +7,16 @@
         <ToolBar HorizontalAlignment="Left" VerticalAlignment="Top">
             <Button Content="Display All Recipes" Click="DisplayRecipesButton_Click"/>
         </ToolBar>
-        
+
         <!-- Recipe Name Section -->
         <Label Content="Recipe name:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,27,0,0"/>
         <TextBox Name="RecipeNameTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="95,40,0,0" Width="152" TextChanged="RecipeNameTextBox_TextChanged"/>
         <Button Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="140,63,0,0" Width="74" Click="SaveButton_Click"/>
-        
+
         <!-- Recipe Selection Section -->
         <ComboBox Name="RecipeSelectComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,40,0,0" Width="200"/>
         <Button Content="Display Selected Recipe" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300,70,0,0" Width="150" Click="DisplaySelectedRecipe_Click"/>
-        
+
         <!-- Ingredient Section -->
         <Label Content="Ingredient" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,79,0,0"/>
         <Label Content="Name:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,110,0,0"/>
@@ -25,8 +25,10 @@
         <TextBox Name="QuantityTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="84,144,0,0" Width="137"/>
         <Label Content="Unit:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,169,0,0"/>
         <TextBox Name="UnitTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="84,173,0,0" Width="137"/>
-        <Label Content="Food Group:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,201,0,0"/>
-        <ComboBox Name="FoodGroupComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="84,201,0,0" Width="137">
+        <Label Content="Calories:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,198,0,0"/>
+        <TextBox Name="CaloriesTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="84,202,0,0" Width="137"/>
+        <Label Content="Food Group:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,231,0,0"/>
+        <ComboBox Name="FoodGroupComboBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="84,231,0,0" Width="137">
             <ComboBoxItem Content="Vegetables"/>
             <ComboBoxItem Content="Fruits"/>
             <ComboBoxItem Content="Grains"/>
@@ -34,12 +36,12 @@
             <ComboBoxItem Content="Dairy"/>
         </ComboBox>
         <Button Content="Save Ingredient" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="84,0,0,0" Width="137" Click="SaveIngredientButton_Click"/>
-        
+
         <!-- Recipe Steps Section -->
-        <Label Content="Steps:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,285,0,0"/>
-        <TextBox Name="StepsTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,321,0,0" Width="240" Height="100" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="StepsTextBox_TextChanged"/>
-        
+        <Label Content="Steps:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,315,0,0"/>
+        <TextBox Name="StepsTextBox" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16,351,0,0" Width="240" Height="100" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="StepsTextBox_TextChanged"/>
+
         <!-- Save Recipe Button -->
-        <Button Name="SaveRecipeButton" Content="Save Recipe" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="127,437,0,0" Width="100" Click="SaveRecipeButton_Click"/>
+        <Button Name="SaveRecipeButton" Content="Save Recipe" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="127,467,0,0" Width="100" Click="SaveRecipeButton_Click"/>
     </Grid>
 </Window>
