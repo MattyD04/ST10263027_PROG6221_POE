@@ -223,11 +223,9 @@ namespace WpfAttempt3
                 {
                     //messagebox that displays when a user wants to display the contents of a specific recipe
                     string recipeDetails = $"Recipe: {selectedRecipe.Name}\n\n" +
-                                           "Ingredients:\n" +
-                                           string.Join("\n", selectedRecipe.Ingredients.Select(ing => $"{ing.Name} - {ing.Quantity} {ing.Unit} ({ing.FoodGroup}) - {ing.Calories} calories")) +
-                                           $"\n\nTotal Calories: {selectedRecipe.Ingredients.Sum(ing => ing.Calories)}\n\n" +
-                                           "Steps:\n" +
-                                           selectedRecipe.Steps;
+                                           $"Ingredients:\n{string.Join("\n", selectedRecipe.Ingredients.Select(ing => $"{ing.Quantity} x {ing.Name} {ing.Unit} ({ing.FoodGroup}) - {ing.Calories} calories"))}\n\n" +
+                                           $"Total Calories: {selectedRecipe.Ingredients.Sum(ing => ing.Calories)}\n\n" +
+                                           $"Steps:\n{selectedRecipe.Steps}";
 
                     MessageBox.Show(recipeDetails, "Recipe Details", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
