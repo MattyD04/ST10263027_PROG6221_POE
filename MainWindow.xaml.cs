@@ -25,6 +25,9 @@ namespace WpfAttempt3
     /// https://www.w3schools.com/cs/cs_operators_logical.php
     /// https://learn.microsoft.com/en-us/dotnet/desktop/wpf/events/how-to-add-an-event-handler-using-code?view=netdesktop-8.0 
     /// https://www.geeksforgeeks.org/c-sharp-list-class/
+    /// https://docs.jmix.io/1.x/jmix/1.5/ui/vcl/containers/group-box-layout.html
+    /// https://www.geeksforgeeks.org/lambda-expressions-in-c-sharp/
+    /// https://learn.microsoft.com/en-us/dotnet/api/system.string.isnullorempty?view=net-8.0
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -57,6 +60,7 @@ namespace WpfAttempt3
             recipes = new List<Recipe>();
             UpdateSaveRecipeButtonState();
             UpdateRecipeSelectComboBox();
+            FilterFoodGroupComboBox.SelectedIndex = 0; // Select "All" by default
         }
         //***************************************************************************************//
         private void SaveButton_Click(object sender, RoutedEventArgs e)// method to save the recipe name(adapted from previous console app and debugged by claude AI)
@@ -70,15 +74,15 @@ namespace WpfAttempt3
             }
             else
             {
-                MessageBox.Show("Please enter a recipe name.");
+                MessageBox.Show("Please enter a recipe name.");//displays a message if the user does not enter a recipe name
             }
         }
         //***************************************************************************************//
         private void SaveIngredientButton_Click(object sender, RoutedEventArgs e) //method to save the ingredients and their details (debugged and corrected by chatgpt)
         {
-            string name = IngredientNameTextBox.Text.Trim();
-            string quantity = QuantityTextBox.Text.Trim();
-            string unit = UnitTextBox.Text.Trim();
+            string name = IngredientNameTextBox.Text.Trim(); //gets the name of the ingredients text
+            string quantity = QuantityTextBox.Text.Trim(); //gets quatities text
+            string unit = UnitTextBox.Text.Trim();//gets units text
             string foodGroup = (FoodGroupComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
             string caloriesText = CaloriesTextBox.Text.Trim(); // Get calories text
 
@@ -87,21 +91,22 @@ namespace WpfAttempt3
             {
                 if (int.TryParse(caloriesText, out int calories)) // Parse calories
                 {
+                    //constructor for ingredients
                     ingredients.Add(new Ingredient
                     {
                         Name = name,
                         Quantity = quantity,
                         Unit = unit,
                         FoodGroup = foodGroup,
-                        Calories = calories // Add calories
+                        Calories = calories
                     });
-                    MessageBox.Show($"Ingredient '{name}' has been saved!"); //displays if all fields have been filled
+                    MessageBox.Show($"Ingredient '{name}' has been saved! You can now enter another ingredient by filling in the fields again"); //displays if all fields have been filled
                     ClearIngredientFields();
                     UpdateSaveRecipeButtonState();
                 }
                 else
                 {
-                    MessageBox.Show("Please enter a valid number for calories.");
+                    MessageBox.Show("Please enter a valid number for calories."); //if user enters a negative number, this message shall display
                 }
             }
             else
@@ -126,6 +131,7 @@ namespace WpfAttempt3
 
             if (!string.IsNullOrWhiteSpace(recipeName) && ingredients.Count > 0 && !string.IsNullOrWhiteSpace(steps))
             {
+                //constructor for the recipe
                 recipes.Add(new Recipe
                 {
                     Name = recipeName,
@@ -145,6 +151,7 @@ namespace WpfAttempt3
             }
             else
             {
+                //errror message that displays if a user has not provided any of the necessary information in the fields but tries saving anyway
                 string errorMessage = "Please ensure you have:\n";
                 if (string.IsNullOrWhiteSpace(recipeName)) errorMessage += " Entered a recipe name\n";
                 if (ingredients.Count == 0) errorMessage += "Added at least one ingredient\n";
@@ -189,7 +196,7 @@ namespace WpfAttempt3
                 for (int i = 0; i < recipes.Count; i++)
                 {
                     MessageBox.Show($"Recipe {i + 1}: {recipes[i].Name}\n" +
-                                    $"Ingredients:\n{string.Join("\n", recipes[i].Ingredients.Select(ing => $"{ing.Name} - {ing.Quantity} {ing.Unit} ({ing.FoodGroup}) - {ing.Calories} calories"))}\n" +
+                                   $"Ingredients:\n{string.Join("\n", recipes[i].Ingredients.Select(ing => $"{ing.Quantity} x {ing.Name} {ing.Unit} ({ing.FoodGroup}) - {ing.Calories} calories"))}\n" +
                                     $"Total Calories: {recipes[i].Ingredients.Sum(ing => ing.Calories)}\n" +
                                     $"Steps:\n{recipes[i].Steps}"); //displays a message box with the details of the recipe
                 }
@@ -214,6 +221,7 @@ namespace WpfAttempt3
 
                 if (selectedRecipe != null)
                 {
+                    //messagebox that displays when a user wants to display the contents of a specific recipe
                     string recipeDetails = $"Recipe: {selectedRecipe.Name}\n\n" +
                                            "Ingredients:\n" +
                                            string.Join("\n", selectedRecipe.Ingredients.Select(ing => $"{ing.Name} - {ing.Quantity} {ing.Unit} ({ing.FoodGroup}) - {ing.Calories} calories")) +
@@ -229,6 +237,28 @@ namespace WpfAttempt3
                 MessageBox.Show("Please select a recipe from the dropdown list.", "No Recipe Selected", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+        //***************************************************************************************//
+        private void ApplyFilterButton_Click(object sender, RoutedEventArgs e)//method to handle the filter feature (corrected by Claude AI)
+        {
+            string ingredientFilter = FilterIngredientTextBox.Text.Trim().ToLower();
+            string foodGroupFilter = (FilterFoodGroupComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+            int maxCalories;
+            int.TryParse(FilterMaxCaloriesTextBox.Text, out maxCalories);
+
+            var filteredRecipes = recipes.Where(recipe =>
+                (string.IsNullOrEmpty(ingredientFilter) || recipe.Ingredients.Any(i => i.Name.ToLower().Contains(ingredientFilter))) &&
+                (foodGroupFilter == "All" || foodGroupFilter == null || recipe.Ingredients.Any(i => i.FoodGroup == foodGroupFilter)) &&
+                (maxCalories == 0 || CalculateTotalCalories(recipe) <= maxCalories)
+            ).ToList();
+
+            FilteredRecipesListBox.ItemsSource = filteredRecipes.Select(r => r.Name);
+        }
+        //***************************************************************************************//
+        private int CalculateTotalCalories(Recipe recipe) //handles the calculation of the total calories
+        {
+            return recipe.Ingredients.Sum(i => i.Calories);
+        }
+        //***************************************************************************************//
     }
 }
 //*****************************************************end of file******************************************//
